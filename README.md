@@ -16,7 +16,7 @@ Claude Code와 Codex에서 쓰는 스킬 모음입니다. 특정 프로그래밍
 
 ## Maintaining this repository · 저장소 관리
 
-- **Change both languages together after English is available.** Once the English version is available, update corresponding files in both language folders with equivalent meaning as part of the same change. The format (file layout, section structure, IDs, tags, and so on) must be the same in both languages.
-- **영어 버전 제공 이후 두 언어를 함께 고칩니다.** 영어 버전 제공 이후에는 두 언어의 대응 파일을 같은 변경에서 같은 의미로 수정합니다. 파일 구성·절 구조·ID·태그 등 형식은 두 언어가 같아야 합니다.
+- **Change both languages together after English is available.** Once the English version is available, update corresponding files in both language folders with equivalent meaning as part of the same change. Keep the file correspondence, section structure and order, identifiers (such as `REQ-01` and `ISSUE-01`), and path rules aligned. Titles, descriptions, status labels, and descriptive tags (such as `[make-plan 중]` / `[during make-plan]`) may be translated with equivalent meaning; keep their roles, conditions, exceptions, and obligation levels the same.
+- **영어 버전 제공 이후 두 언어를 함께 고칩니다.** 영어 버전 제공 이후에는 두 언어의 대응 파일을 같은 변경에서 같은 의미로 수정합니다. 파일의 대응 관계·절 구조와 순서·식별자(`REQ-01`, `ISSUE-01` 등)·경로 규칙을 맞춥니다. 제목·설명·상태 표시·설명용 태그(`[make-plan 중]` / `[during make-plan]` 등)는 같은 의미로 번역할 수 있으며, 역할·조건·예외·의무 수준은 동일하게 유지합니다.
 - Rules for editing skills within a language version are in that folder's README.
 - 언어 폴더 안에서 스킬을 고칠 때의 규칙은 해당 폴더의 README를 따릅니다.

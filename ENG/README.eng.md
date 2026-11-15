@@ -30,7 +30,7 @@ The English version of a skill set for Claude Code and Codex. It is written so a
 | [docs-duplication](.claude/skills/docs-duplication/SKILL.md) | Review duplication within and across documents | No | None |
 
 - Skills with "Yes" for "Model auto-selection" may be selected based on the request even without `/skill-name` or `$skill-name`. Even then, the explicit-request conditions set by each skill must be met. "No" skills are invoked directly with `/skill-name` (`$skill-name` in Codex).
-- `q` and `basic-code-review` do not run builds or tests. `concurrency-lifecycle-review` asks the user before running builds, tests, or the target program, and does not perform runs that could change files or the state of a DB or external services.
+- `q` and `basic-code-review` do not run builds or tests. `concurrency-lifecycle-review` checks execution side effects first and rules out, without requesting approval, runs that could change files, a DB, or external-service state, or whose potential for those effects cannot be verified. It asks the user in advance only for runs that do not fall under this restriction.
 
 ## Installation and Usage
 
@@ -86,7 +86,7 @@ Artifacts are saved in `docs/agents/output/plan/{TS}/` (`{TS}` is `yyMMdd_HHmmss
 
 - Move on to writing the SPEC only after every item in the PRD's section 11 completion checklist is checked `[x]` with evidence (PRD gate).
 - Completion conditions: every item in the section 11 completion checklists of the PRD and SPEC artifacts (format per each guide's template) is checked `[x]` with evidence, and there are no unanswered questions.
-- The progress status (`In progress` / `Awaiting answers` / `Ready`) and resume information are recorded in the PRD header. While awaiting answers, the documents are saved, and designating the same `{TS}` folder continues the work.
+- The progress status (`In progress` / `Awaiting answers` / `Ready`) and resume information are recorded in the PRD header. While awaiting answers, the documents are saved, and designating the same `{TS}` folder continues the work. Missing artifacts are completed under before-plan's resume rules; past PROMPT conversation is restored only from verifiable original text, and content that cannot be verified remains marked as missing or unverified.
 - If the code and documents differ or questions arise while writing, decide which of SPEC, PRD, and PROMPT to fix according to the "Branching Rules" in [before-plan/SKILL.md](.claude/skills/before-plan/SKILL.md).
 
 ### make-plan
@@ -102,12 +102,13 @@ Artifacts are saved in `docs/agents/output/plan/{TS}/` (`{TS}` is `yyMMdd_HHmmss
 | New PLAN from a substitute input | Write only `{TS}_PLAN.md` in a new `{TS}` folder following before-plan's location and timestamp rules |
 | Resuming or updating an existing PLAN is designated | Update it in the designated existing file and folder regardless of input type. A PLAN designated only as reference material is not automatically treated as the one to resume |
 
-- A substitute input gets a first-pass review first. If the recommended input is incomplete, make-plan reports that and asks the user whether to finish before-plan or to proceed after a first-pass review. In the first-pass review, missing items are checked against the code first, and only what needs the user's judgment, such as goals, scope, and success criteria, is asked. Unanswered items are left as open issues in the PLAN and work proceeds.
-- Questions and answers are recorded in the PROMPT for the recommended input, and in the PLAN's Decision Log for a substitute input. Recommendations are kept separate from the user's decisions, and a recommendation or non-response is not recorded as the user's choice.
+- A substitute input gets a first-pass review first. If a PRD/SPEC in the recommended input is missing or its completion checklist is incomplete, make-plan reports that and asks the user whether to finish before-plan or to proceed after a first-pass review. In the first-pass review, missing items are checked against the code first, and only what needs the user's judgment, such as goals, scope, and success criteria, is asked. Unanswered items are left as open issues in the PLAN and work proceeds.
+- If the recommended input lacks a PROMPT, explain the restoration path and defer further questions about requirements and design until restoration. If there is no PRD in which to incorporate new requirements, leave the affected steps and downstream steps unresolved. In either case, plans supported by the existing PRD/SPEC can still be written. before-plan handles creating or restoring missing documents in the same `{TS}` folder.
+- Questions and answers are recorded in the PROMPT for the recommended input, and in the PLAN's Decision Log for a substitute input. Recommendations are kept separate from the user's decisions, and a recommendation or non-response is not recorded as the user's choice. When recording is deferred because the PROMPT is missing, mark the pending logging as an open issue and record the verifiable original text after restoration.
 - The PLAN contains, for each step ID (`S1`…), the evidence, targets (`file:line` for existing files, `path (new)` for new files), and completion conditions, plus acceptance criteria and verification, open issues (`ISSUE-01`…), and the Decision Log.
 - The verification plan lists the methods and pass criteria for the applicable layers among Unit, Integration, E2E, and manual, and includes the project's build, type-check, and lint commands, if any, as prerequisite checks. Layers that do not apply get `N/A` with the reason, and layers where automated verification applies but the user cannot decide on a command either get `Undefined` with the reason. Writing the plan alone does not mark implementation or verification as complete.
 - Implementation proceeds only when the user explicitly requests it, and only within that scope.
-- When implementation is requested, work that can be done within existing requirements, verified evidence, and the delegated scope proceeds even with open issues. However, implementation that depends on matters requiring the user's decision, and follow-up implementation that assumes their results, is done after that decision is secured. Technical choices are made autonomously within existing requirements and the delegated scope, and no additional approval is requested for answers or delegation already secured.
+- When implementation is requested, work that can be done within existing requirements, verified evidence, and the delegated scope proceeds even with open issues. However, implementation that depends on matters requiring the user's decision or on missing required input evidence, and follow-up implementation that assumes their results, is done after that decision or evidence is secured. Technical choices are made autonomously within existing requirements and the delegated scope, and no additional approval is requested for answers or delegation already secured.
 
 ## Common Principles
 
@@ -119,7 +120,7 @@ Artifacts are saved in `docs/agents/output/plan/{TS}/` (`{TS}` is `yyMMdd_HHmmss
 
 - **Within this folder, `.claude/skills/` is the source.** Copy the frontmatter (`name`, `description`) of the `.agents` wrappers verbatim from the source, and keep in the body only a line pointing to the source and, if needed, Codex-specific guidance (e.g., the `$make-plan` guidance in `before-plan`).
 - **Keep the model auto-selection settings paired.** "No" skills have `disable-model-invocation: true` in the source and `allow_implicit_invocation: false` in the wrapper's `openai.yaml`.
-- **Edit places that share the same sentence together.** The review target and change definition sentence of `basic-code-review` and `concurrency-lifecycle-review` (the first item in the body of each SKILL.md).
+- **Edit places that share the same rules together.** The review target, comparison baseline, and handling of unavailable comparisons in `basic-code-review` and `concurrency-lifecycle-review` (the first three items in the body of each SKILL.md).
 - **Within the skill files, keep the source of truth for each rule below in only one place**, and have other skill files only reference it. This README is a summary; if it differs from the skill files, follow the skill files.
 
   | Rule | Source of truth |

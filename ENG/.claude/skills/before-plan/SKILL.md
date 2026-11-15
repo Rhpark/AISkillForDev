@@ -91,6 +91,7 @@ Manage the progress status with the following rules.
 
 - Leave the last completed step, unanswered question IDs, and the code baseline together in the PRD header. For the code baseline, record the related commit and uncommitted change state when possible, or the key files and the time of the check if Git is not used.
 - Read the documents and follow-up answers in the designated folder, and judge whether each question is unanswered based on its latest answer. If the existing documents lack resume information, fill it in to the extent verified.
+- Create or restore missing artifacts in the designated folder within that same `{TS}` folder, following the writing and editing rules of this skill and each guide. When restoring a PROMPT, record only conversation text whose original wording can be verified, with its source; mark past requests, questions, and answers that cannot be verified as missing or unverified. Do not reconstruct past conversation by inference from requirements or code. Restoring an artifact alone does not satisfy the completion conditions.
 - Check whether the related code has changed, and re-check the affected facts, file:line evidence, and checklist items. Do not change requirements because of code changes alone; follow the Branching Rules above for the fix path.
 
 ## Detailed Writing Guides (refer when needed)
