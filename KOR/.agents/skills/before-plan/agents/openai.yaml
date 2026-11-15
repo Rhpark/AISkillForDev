@@ -1,0 +1,4 @@
+interface:
+  display_name: "Before Plan"
+  short_description: "구현 계획 전 PROMPT/PRD/SPEC 작성"
+  default_prompt: "$before-plan으로 PROMPT/PRD/SPEC을 작성해줘."

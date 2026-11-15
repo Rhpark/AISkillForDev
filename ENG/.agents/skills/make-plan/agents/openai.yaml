@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make Plan"
+  short_description: "Turn PRD/SPEC into an implementation PLAN"
+  default_prompt: "Use $make-plan to turn the PRD/SPEC (before-plan artifacts or documents I provide) into an implementation PLAN."

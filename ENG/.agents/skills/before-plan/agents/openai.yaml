@@ -1,0 +1,4 @@
+interface:
+  display_name: "Before Plan"
+  short_description: "Write PROMPT/PRD/SPEC before implementation planning"
+  default_prompt: "Use $before-plan to write the PROMPT/PRD/SPEC."

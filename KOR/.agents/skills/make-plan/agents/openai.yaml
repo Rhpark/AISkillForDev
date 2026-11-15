@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make Plan"
+  short_description: "PRD/SPEC을 구현 PLAN으로 구체화"
+  default_prompt: "$make-plan으로 PRD/SPEC(before-plan 산출물 또는 내가 알려준 문서)을 구현 PLAN으로 만들어줘."
